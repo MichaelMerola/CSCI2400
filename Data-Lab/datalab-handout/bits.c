@@ -209,12 +209,12 @@ int minusOne(void) { //COMPLETE
 
         Binary 1: 0001
         Binary -1: 1111 (using two's complement)
-        hexadecimal -1: -0x1
+
     */
 
-    int word = -0x1;
+    int minus = (~1 + 1);
 
-    return word;
+    return minus;
 }
 
 
@@ -263,13 +263,14 @@ int divpwr2(int x, int n) { //COMPLETE
 
         Add x to floor variable, then perform divide operation.
     */
+    int divide;
 
     int mask = x >> 31;
-    int f = ((1 << n) - 1) & mask;
+    int f = ((1 << n) + (~1 + 1)) & mask;
 
     x = x + f;
 
-    int divide = x >> n;
+    divide = (x >> n);
 
     return divide;
 }
@@ -294,13 +295,15 @@ int getByte(int x, int n) { //COMPLETE
 
         Mask x with 0xff (1111 1111) to leave only LSB
     */
+    int word, mask;
 
     int convert = n << 3;
     n = convert;
 
     x = x >> n;
 
-    int word = x & 0xff;
+    mask = 0xff;
+    word = x & mask;
 
     return word;
 }
@@ -388,17 +391,18 @@ int isAsciiDigit(int x) { //COMPLETE
         mask bits to check for negative and ! to clear
         return total, 1 is true and 0 is false
     */
+    int total, left, l, right, r;
 
-    int l = 0x2f;
-    int left = x + (~l + 1);
+    l = 0x2f;
+    left = x + (~l + 1);
     left = !(left & 0xff);
 
 
-    int r = 0x3a;
-    int right = x + (~r + 1);
+    r = 0x3a;
+    right = x + (~r + 1);
     right = !(right & 0xff);
 
-    int total = left + right;
+    total = left + right;
 
     return total;
 }
@@ -517,7 +521,7 @@ int conditional(int x, int y, int z) { //COMPLETE
  */
 int howManyBits(int x) {
 
-    
+    //EXTRA CREDIT
 
     return 2;
 }
@@ -533,23 +537,24 @@ int howManyBits(int x) {
  */
 int isNonZero(int x) { //COMPLETE
     /*
-        the complement of every binary number has the opposite sign of the original
-        therefore, if we take the complement, the MSB will be the ~sign of the number
+        The complement of every binary number has the opposite sign of the original
+        Therefore, if we take the complement, the MSB will be the ~sign of the number
 
         place the leading bit into the LSB position
 
         create mask to eliminate leading terms
     */
+    int total, mask;
 
-    int negX = (~x + 1);
+    int negX = (~x + 1); //make x negative with two's complement
     int c = x | negX;
 
-     c = c >> 31;
+    c = c >> 31; //should be all 1s if nonzero
 
-     int mask = 0x1;
-     int total = c & mask;
+    mask = 0x1;
+    total = c & mask; //should leave a 1 if nonzero
 
-     return total;
+    return total;
 }
 
 
@@ -566,16 +571,16 @@ int absVal(int x) { //COMPLETE
         Translate negative numbers to positive so they represent magnitude without sign
 
         Right shift x so the MSB is in the LSB position to create a mask
-            either (00000000) or (11111111)
+            either (00000000) if positive or (11111111) if negative
 
-        Use xor operator to inverse the integer
+        Use xor operator to inverse the bits that are opposite
         Results in abs value of original integer
     */
 
     int mask = x >> 31;
     int word = x + mask;
 
-    word = word ^ mask;
+    word = word ^ mask; //returns 1s if negative number
 
     return word;
 }
@@ -589,18 +594,18 @@ int absVal(int x) { //COMPLETE
  *   Max ops: 20
  *   Rating: 4
  */
-int isPower2(int x) { //COMPLETE
+int isPower2(int x) { //COMPLETE.
     /*
         An integer with 32 bits is a power of 2..
 
         left shift so LSB becomes MSB and then right shift to fill bits with MSB
             fills 1s if nonzero, 0 if zero
 
-        neg or one should make a (00000001) if nonzero, or all 1s
+        neg|one should make a (00000001) if nonzero, or all 1s
 
     */
 
-    int shift = (!x << 31) >> 31;
+    int shift = (!x << 31) >> 31; //copyLSB functionality
 
     int neg = (x & (~x + 1));
     int one = (0x01 << 31);
